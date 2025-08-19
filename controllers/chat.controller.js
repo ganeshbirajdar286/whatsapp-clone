@@ -33,7 +33,7 @@ export const sendMessage = async (req, res) => {
             } else {
                 return response(res, 400, "Unsupported file type")
             } 
-        } else if (contentType?.trim()) {
+        } else if (content?.trim()) {
             contentType = "text"
         } else {
             return response(res, 400, "Message contain in required");
