@@ -3,7 +3,7 @@ import {mongoose,Schema} from "mongoose";
 
 const messageSchema=new Schema({
     conversation:{
-        type:mongoose.Schema.Types.objectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Conversation",
         require:true,
     },

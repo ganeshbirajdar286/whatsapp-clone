@@ -4,6 +4,7 @@ import connectDB from "./config/dbConnect.js"
 import  cors from "cors"
 import cookieParser from "cookie-parser"
 import authRouter from "../backend/router/auth.router.js"
+import chatRouter from "../backend/router/chat.router.js"
 
 dotenv.config()
 const app =express();
@@ -13,8 +14,9 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 app.use("/api/auth",authRouter);
+app.use("/api/chat",chatRouter);
 
-app.listen(port,(req,res)=>{
+app.listen(port,(req,res)=>{ 
     connectDB();
     console.log(`server started at http://localhost:${port}`);
 })  
