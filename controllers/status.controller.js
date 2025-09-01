@@ -56,55 +56,55 @@ export const getStatuses = async (req, res) => {
         const statuses = await Status.find({
             expiresAt: { $gt: new Date() }
         }).populate("viewers", "username profilePicture").sort({ createdAt: -1 })
-        return response(res,200,"statuses retrived successfully!! ",statuses)
+        return response(res, 200, "statuses retrived successfully!! ", statuses)
     } catch (error) {
-  console.error(error);
+        console.error(error);
         return response(res, 500, "Internal server error");
     }
 }
 
-export const  viewStatus=async(req,res)=>{
-  const{statusId}=req.params;
-  const userId = req.user?.userId;
-  try {
-    const status =await Status.find({statusId});
-    if(!status){
-        return response(res,404,"no status found")
-    }
-    if(!status.viewers.includes(statusId)){
-        status.viewers.push(userId)
-        await status.save()
+export const viewStatus = async (req, res) => {
+    const { statusId } = req.params;
+    const userId = req.user?.userId;
+    try {
+        const status = await Status.find({ statusId });
+        if (!status) {
+            return response(res, 404, "no status found")
+        }
+        if (!status.viewers.includes(statusId)) {
+            status.viewers.push(userId)
+            await status.save()
 
-        const updatedStatus=await Status.findById(statusId)
-           .populate("user", "username profilePicture")
-            .populate("viewers", "username profilePicture");
-    }else{
-        console.log("user already viewed");
-    }
-    return response(res,200,"status viewed successfully")
-  } catch (error) {
-      console.error(error);
+        const updatedStatus = await Status.findById(statusId)
+                .populate("user", "username profilePicture")
+                .populate("viewers", "username profilePicture");
+        } else {
+            console.log("user already viewed");
+        }
+        return response(res, 200, "status viewed successfully")
+    } catch (error) {
+        console.error(error);
         return response(res, 500, "Internal server error");
-  }
+    }
 }
 
 
 
-export const deleteStatus=async(req,res)=>{
-   const{statusId}=req.params;
-  const userId = req.user?.userId;
-  try {
-    const status=await Status.findById(statusId)
-     if(!status){
-        return response(res,404,"no status found")
-    }
-    if(status.user.toString() !== userId){
-        return response(res, 400, "Not authorized to delete messages!! ");
-    }
-    await status.deleteOne();
-    return response(res,200,"status deleted successfully")
-  } catch (error) {
-    console.error(error);
+export const deleteStatus = async (req, res) => {
+    const { statusId } = req.params;
+    const userId = req.user?.userId;
+    try {
+        const status = await Status.findById(statusId)
+        if (!status) {
+            return response(res, 404, "no status found")
+        }
+        if (status.user.toString() !== userId) {
+            return response(res, 400, "Not authorized to delete messages!! ");
+        }
+        await status.deleteOne();
+        return response(res, 200, "status deleted successfully")
+    } catch (error) {
+        console.error(error);
         return response(res, 500, "Internal server error");
-  }
+    }
 }
