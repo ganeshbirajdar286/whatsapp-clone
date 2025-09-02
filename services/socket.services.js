@@ -1,7 +1,7 @@
-import Server from "socket.io";
+import { Server } from "socket.io";
 import User from "../models/user.model.js";
 import Message from "../models/messages.model.js";
-import { use } from "react";
+
 
 //Map to store online users ->userId,socketId 
 const onlineUsers=new Map();  // this is javascript  object  
@@ -222,6 +222,7 @@ socket.on("disconnnect",handleDisconnected)
 
 // attach the nlinne user map to the coket server for external user
 io.socketUserMap=onlineUsers;
+return io;
 }
 
 

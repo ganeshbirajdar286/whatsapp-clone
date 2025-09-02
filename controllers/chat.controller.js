@@ -59,6 +59,15 @@ export const sendMessage = async (req, res) => {
             .populate("sender", "username profilePicture")
             .populate("receiver", "username profilePicture");
 
+             // emit socket event 
+             if(req.io &&  req.socketUserMap){
+            const receiverSocketId=req.socketUserMap.get(receiver);
+            if(receiverSocketId){
+                req.io.to(receiverSocketId).emit('receiver_message',populateMessage);
+                message.messageStatus="delivered";
+                await message.save();
+            }
+            }
         return response(res, 200, "Message send succesfully!", populateMessage);
     } catch (error) {
         console.error(error);
@@ -136,6 +145,21 @@ export const markAsRead = async (req, res) => {
             { _id: { $in: messageIds }, receiver: userId },
             { $set: { messageStatus: "read" } }
         );
+
+         // notify to original sender  
+             if(req.io &&  req.socketUserMap){
+              for(const message of message){
+                const senderSocketId=req.socketUserMap.get(message.sender.toString());
+                if(senderSocketId){
+                    const updatedMessage ={
+                        _id:message._id,
+                        messageStatus:"read",
+                    };
+                    req.io.to(senderSocketId).emit("message_read",updatedMessage);
+                    await message.save();
+                }
+              }
+            }
         return response(res, 200, "messageds marked as read", message)
     } catch (error) {
         console.error(error);
@@ -156,6 +180,15 @@ export const deleteMessage = async (req, res) => {
         }
 
         await message.deleteOne();
+         // emit socket event 
+             if(req.io &&  req.socketUserMap){
+          const receiverSocketId=req.socketUserMap.get(message.receiver.toString());
+          if(receiverSocketId){
+            req.io.to(receiverSocketId).emit("message_deleted",messageId)
+          }
+            }
+
+
         return response(res, 200, "message deleted succesfully!!");
 
     } catch (error) {
