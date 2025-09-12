@@ -220,7 +220,7 @@ const handleDisconnected = async()=>{
 socket.on("disconnnect",handleDisconnected)
 })
 
-// attach the nlinne user map to the coket server for external user
+// attach the online user map to the scoket server for external user
 io.socketUserMap=onlineUsers;
 return io;
 }
