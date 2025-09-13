@@ -74,8 +74,9 @@ export const verifyotp = async (req, res) => {
          if (!user) {
                 return response(res, 404, "User not found")
             }
-               const result=await verifyOtp(fullPhoneNumber,otp)
-            if(result.status !== "approved"){
+          const newOtp=otp.join("")
+               const result=await verifyOtp(fullPhoneNumber,newOtp)
+            if( result.status !== "approved"){
                 return  response(res,400,"Invaid otp");
             }
             user.isVerified=true;

@@ -12,7 +12,7 @@ import http from "http"
 dotenv.config()
 const app =express();
 const corsOption ={
-origin:process.env.FORNTEND_URL,
+origin:process.env.FRONTEND_URL,
 credentials:true,
 }
 

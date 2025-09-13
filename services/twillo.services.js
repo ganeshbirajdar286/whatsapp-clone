@@ -27,6 +27,7 @@ export const senOtpToPhoneNumber=async(phoneNumber)=>{
 
 //Twilio's backend checks if the provided otp matches the one it previously sent to the phoneNumber.
 export const verifyOtp=async(phoneNumber,otp)=>{
+   
     try {
         const response= await client.verify.v2.services(serviceSid).verificationChecks.create({
             to:phoneNumber,
@@ -36,6 +37,7 @@ export const verifyOtp=async(phoneNumber,otp)=>{
 
     } catch (error) {
         console.log("otp verification failed",error.message);
-    }
+        return(error.message)
+    } 
 }
  
