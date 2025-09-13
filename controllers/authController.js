@@ -87,6 +87,7 @@ export const verifyotp = async (req, res) => {
             maxAge:1000*60*60*24*365,
             httpOnly:true,
             sameSite:"none",
+            secure: true,
         })
         return response(res,200,"otp verify successfully",user)
     } catch (error) {
@@ -125,7 +126,8 @@ export const logout=async(req,res)=>{
         res.cookie("token"," ",{
               expires: new Date(0), // expire immediately\
             httpOnly:true,
-            sameSite:"none"
+            sameSite:"none",
+            secure: true,
         });
         return response(res,200,"user logout successfully")
         
